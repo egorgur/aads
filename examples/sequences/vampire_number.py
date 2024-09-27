@@ -13,8 +13,8 @@ Wiki: https://en.wikipedia.org/wiki/Vampire_number
 """
 
 from contextlib import suppress
-from math import prod
 from itertools import permutations
+from math import prod
 from typing import Generator, Optional
 
 

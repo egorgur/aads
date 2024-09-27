@@ -10,7 +10,6 @@ Wiki:
 
 import turtle
 
-
 START_AXIOM = 'x'
 LEN_STEP = 5
 NUMBER_STEP = 6

@@ -4,7 +4,6 @@ import unittest
 
 import search  # pylint: disable=E0401
 
-
 TEST_SEARCH_ONE_SYMBOL = [
     ('', 'a', False, 'first', 1, None),
     ('', 'a', True, 'first', 1, None),

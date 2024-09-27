@@ -4,7 +4,7 @@ Wiki:
     https://en.wikipedia.org/wiki/Kaprekar%27s_routine
 """
 
-from typing import Tuple, Union, Generator
+from typing import Generator, Tuple, Union
 
 
 def kaprekar_function(number: int) -> Tuple[int, int]:

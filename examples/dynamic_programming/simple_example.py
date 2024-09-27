@@ -6,7 +6,6 @@
 
 from typing import Optional, Sequence, Union
 
-
 ItemType = Union[int, float]
 
 

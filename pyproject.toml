@@ -1,0 +1,82 @@
+[tool.poetry]
+name = "aads"
+version = "0.1.0"
+description = ""
+authors = ["Egor Gurtyakin <egorgurtyakin@gmail.com>"]
+readme = "README.md"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+# GUI Qt bindings for Python
+# https://pypi.org/project/PySide6/
+pyside6 = "^6.7.2"
+rich = "^13.8.1"
+pygame = "^2.6.0"
+pylint = "^3.3.1"
+pyside6-utils = "^1.2.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.4"
+ipdb = "^0.13.13"
+ipython = "^8.27.0"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.3"
+pytest-xdist = "^3.6.1"
+pytest-sugar = "^1.0.0"
+
+
+# ----------------------------------------------------------------------------
+# RUFF
+# ----------------------------------------------------------------------------
+[tool.ruff.lint]
+exclude = [
+    # Disable ruff for examples/ directory
+    "examples/*",
+]
+extend-select = [
+    # https://docs.astral.sh/ruff/rules/#isort-i
+    "I",
+    # https://docs.astral.sh/ruff/rules/#pep8-naming-n
+    "N",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+  # https://docs.astral.sh/ruff/rules/unused-import
+  "F401",
+]
+
+[tool.ruff.lint.isort]
+force-wrap-aliases = true
+split-on-trailing-comma = true
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+parametrize-names-type = "list"
+parametrize-values-type = "list"
+parametrize-values-row-type = "list"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+exclude = [
+    # Disable files to format
+    #   "**/views.py",
+    #   "**/views/*",
+]

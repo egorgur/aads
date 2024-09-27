@@ -4,7 +4,6 @@ import unittest
 
 import binary_search  # pylint: disable=E0401
 
-
 TEST_DATA = [
     ([42], 42, 0),
     ([1, 2, 3], 2, 1),

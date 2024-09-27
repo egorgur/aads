@@ -1,6 +1,7 @@
 """Тесты для модуля fractal_plant.py"""
 
 import unittest
+
 from fractal_plant import fractal_plant  # pylint: disable=E0401
 
 TEST_FRACTAL_PLANT = [

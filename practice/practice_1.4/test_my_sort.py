@@ -4,7 +4,6 @@ import unittest
 
 import my_sort  # pylint: disable=E0401
 
-
 TEST_NUMBER = [
     [],
     [1],

@@ -3,7 +3,6 @@
 
 from typing import Generator, List, Tuple
 
-
 HARSHAD = 'Harshad number'
 NIVENMORPHIC = 'Nivenmorphic number'
 

@@ -1,6 +1,6 @@
 import unittest
-from sierpinski_tetrahedron import Tetrahedron
 
+from sierpinski_tetrahedron import Tetrahedron
 
 TEST_FIND_MEDIUM = [
     ([(0, 0, 0), (3, 6, 10)], [1.5, 3.0, 5.0]),

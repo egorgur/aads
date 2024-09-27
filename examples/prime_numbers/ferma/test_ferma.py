@@ -1,8 +1,8 @@
 """Тесты модуля ferma.py"""
 
 import unittest
-from ferma import ferma  # pylint: disable=E0401
 
+from ferma import ferma  # pylint: disable=E0401
 
 TEST_DATA = [
     (2, True),

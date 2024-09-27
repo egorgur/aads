@@ -4,13 +4,13 @@
     - frootin
 """
 
-from math import cos, sin
 from itertools import combinations
+from math import cos, sin
 from random import randint
-from typing import Tuple, List
+from typing import List, Tuple
+
 import numpy as np
 import pygame as pg
-
 
 SIDE = 800
 SCALE = 250

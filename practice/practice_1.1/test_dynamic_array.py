@@ -1,11 +1,10 @@
 """Тесты для модуля dynamic_array"""
 
-import unittest
 import array
 import time
+import unittest
 
 import dynamic_array  # pylint: disable=E0401
-
 
 TEST_LEN = [
     ('d', [], 0),

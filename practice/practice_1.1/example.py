@@ -4,8 +4,6 @@ import sys
 
 import my_array  # pylint: disable=E0401
 
-
-
 x = my_array.array('d', 5)
 
 print(f'{x = }')

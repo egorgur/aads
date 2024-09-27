@@ -10,7 +10,6 @@ Wiki:
 
 from typing import Generator
 
-
 GOLDEN_RATIO = (1 + 5**0.5) / 2
 
 

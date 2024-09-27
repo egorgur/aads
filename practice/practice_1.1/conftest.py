@@ -3,8 +3,8 @@
 
 import math
 import timeit
-import pytest
 
+import pytest
 
 SETUP_CODE = 'from array import array; a = array("i")'
 APPEND_CODE = '''

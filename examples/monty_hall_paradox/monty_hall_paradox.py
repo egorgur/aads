@@ -7,7 +7,6 @@ Wiki:
 import random
 from typing import Tuple
 
-
 CAR, GOAT = 'car', 'goat'
 
 

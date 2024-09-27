@@ -1,6 +1,7 @@
 """Тесты для модуля dragon_curve.py"""
 
 import unittest
+
 from dragon_curve import dragon_curve  # pylint: disable=E0401
 
 TEST_DRAGON_CURVE = [
