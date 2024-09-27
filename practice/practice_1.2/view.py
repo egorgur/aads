@@ -1,3 +1,5 @@
+"""View module."""
+
 # -*- coding: utf-8 -*-
 
 ################################################################################
@@ -8,20 +10,14 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (
-    QCoreApplication,
-    QMetaObject,
-    QSize,
-)
-from PySide6.QtGui import (
-    QAction,
-    QIcon,
-)
+from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLineEdit,
     QListWidget,
+    QMenuBar,
     QPushButton,
     QSizePolicy,
     QSpacerItem,
@@ -30,11 +26,16 @@ from PySide6.QtWidgets import (
 )
 
 
-class Ui_MainWindow(object):
+class View(object):
+    """
+    View class.
+    
+    Sets the ui and connects it to backend.
+    """
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(836, 693)
+        MainWindow.resize(500, 800)
         MainWindow.setMinimumSize(QSize(200, 300))
         MainWindow.setMouseTracking(False)
         MainWindow.setAutoFillBackground(False)
@@ -81,8 +82,6 @@ class Ui_MainWindow(object):
             QIcon.State.Off,
         )
         self.about_action.setIcon(icon)
-        self.actionhytrhjryt = QAction(MainWindow)
-        self.actionhytrhjryt.setObjectName("actionhytrhjryt")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.centralwidget.setStyleSheet(
@@ -147,10 +146,10 @@ class Ui_MainWindow(object):
         self.tracklist_widget.setObjectName("tracklist_widget")
         self.verticalLayout_4 = QVBoxLayout(self.tracklist_widget)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.listWidget = QListWidget(self.tracklist_widget)
-        self.listWidget.setObjectName("listWidget")
+        self.tracklist_list = QListWidget(self.tracklist_widget)
+        self.tracklist_list.setObjectName("tracklist")
 
-        self.verticalLayout_4.addWidget(self.listWidget)
+        self.verticalLayout_4.addWidget(self.tracklist_list)
 
         self.add_button = QPushButton(self.tracklist_widget)
         self.add_button.setObjectName("add_button")
@@ -221,6 +220,58 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.inner_frame)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        self.menuBar = QMenuBar(MainWindow)
+        self.menuBar.setObjectName("menuBar")
+        self.menuBar.setEnabled(True)
+        self.menuBar.setGeometry(QRect(0, 0, 836, 22))
+        self.menuBar.setStyleSheet(
+            "QMenuBar{\n"
+            "background-color:#2b2d30;\n"
+            "color: #d1d1cc;\n"
+            "}\n"
+            "QMenuBar::item:selected{\n"
+            "color: #e2e2dd;\n"
+            "background: #4d4e51;\n"
+            "}\n"
+            "QMenu{\n"
+            "background-color:#2b2d30;\n"
+            "color: #d1d1cc;\n"
+            "border: 1px solid #18191c;\n"
+            "}\n"
+            "QMenu::item{\n"
+            "background-color:#2b2d30;\n"
+            "color: #d1d1cc;\n"
+            "margin: 0;\n"
+            "padding: 2px 8px 2px 4px;\n"
+            "}\n"
+            "QMenu::item:selected{\n"
+            "color: #e2e2dd;\n"
+            "background: #4d4e51;\n"
+            "}\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
+            "\n"
+            "r"
+        )
+        self.previous_menu_action = QAction(self.menuBar)
+        self.previous_menu_action.setObjectName("previous_menu_action")
+        self.play_menu_action = QAction(self.menuBar)
+        self.play_menu_action.setObjectName("play_menu_action")
+        self.next_menu_action = QAction(self.menuBar)
+        self.next_menu_action.setObjectName("next_menu_action")
+        self.next_menu_action.setEnabled(True)
+        self.stop_menu_action = QAction(self.menuBar)
+        self.stop_menu_action.setObjectName("stop_menu_action")
+        MainWindow.setMenuBar(self.menuBar)
+
+        self.menuBar.addAction(self.previous_menu_action)
+        self.menuBar.addAction(self.play_menu_action)
+        self.menuBar.addAction(self.stop_menu_action)
+        self.menuBar.addAction(self.next_menu_action)
 
         self.retranslateUi(MainWindow)
 
@@ -249,6 +300,10 @@ class Ui_MainWindow(object):
         self.actionTrsfewfwefwe.setText(
             QCoreApplication.translate("MainWindow", "Trsfewfwefwe", None)
         )
+        self.previous_btn.setText(QCoreApplication.translate("MainWindow", "<<", None))
+        self.play_btn.setText(QCoreApplication.translate("MainWindow", "play", None))
+        self.stop_btn.setText(QCoreApplication.translate("MainWindow", "stop", None))
+        self.next_btn.setText(QCoreApplication.translate("MainWindow", ">>", None))
         self.actionerfgwergewrg.setText(
             QCoreApplication.translate("MainWindow", "erfgwergewrg", None)
         )
@@ -303,13 +358,6 @@ class Ui_MainWindow(object):
                 None,
             )
         )
-        self.actionhytrhjryt.setText(
-            QCoreApplication.translate("MainWindow", "hytrhjryt", None)
-        )
-        self.previous_btn.setText(QCoreApplication.translate("MainWindow", "<<", None))
-        self.play_btn.setText(QCoreApplication.translate("MainWindow", "play", None))
-        self.stop_btn.setText(QCoreApplication.translate("MainWindow", "stop", None))
-        self.next_btn.setText(QCoreApplication.translate("MainWindow", ">>", None))
         self.add_button.setText(
             QCoreApplication.translate(
                 "MainWindow",
@@ -359,5 +407,43 @@ class Ui_MainWindow(object):
                 None,
             )
         )
+        # self.previous_menu_action.(
+        #     QCoreApplication.translate("MainWindow", "<<", None)
+        # )
+        # self.play_menu_action.setTitle(
+        #     QCoreApplication.translate("MainWindow", "play", None)
+        # )
+        # self.next_menu_action.setTitle(
+        #     QCoreApplication.translate("MainWindow", ">>", None)
+        # )
+        # self.stop_menu_action.setTitle(
+        #     QCoreApplication.translate("MainWindow", "stop", None)
+        # )
 
     # retranslateUi
+
+    def set_connections(self):
+        """Bind the callback functions to ui."""
+
+        self.add_button.clicked.connect(self.add_song)
+
+        self.remove_button.clicked.connect(self.remove_song)
+
+        self.play_btn.clicked.connect(self.choose_song)
+
+        self.stop_btn.clicked.connect(self.stop_track)
+
+        self.previous_btn.clicked.connect(self.play_previous)
+
+        self.next_btn.clicked.connect(self.play_next)
+
+        self.change_button.clicked.connect(self.change_position_dialogue)
+
+
+        self.create_playlist_button.clicked.connect(self.create_playlist)
+
+        self.delete_playlist_button.clicked.connect(self.delete_playlist)
+
+        self.select_playlist_button.clicked.connect(self.select_playlist)
+
+        

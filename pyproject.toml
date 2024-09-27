@@ -53,6 +53,17 @@ extend-select = [
   "F401",
 ]
 
+"ui.py" = [
+    "N803",
+    "N802",
+    "N801"
+]
+"view.py" = [
+    "N803",
+    "N802",
+    "N801"
+]
+
 [tool.ruff.lint.isort]
 force-wrap-aliases = true
 split-on-trailing-comma = true
