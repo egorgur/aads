@@ -1,3 +1,4 @@
+# pylint: disable-all
 """Тесты модуля linked_list"""
 
 import unittest
