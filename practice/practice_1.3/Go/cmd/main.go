@@ -1,9 +1,19 @@
 package main
 
 import (
-	// "pr3/internal"
+	"fmt"
+	"pr3/internal"
 )
 
 func main() {
-	// search.Search("sed", []string{"111","22","24","12321","124124"})
+
+	// Пример использования
+	text := "abc"
+	subStrings := []string{"abc"}
+	caseSensitivity := false
+	method := "last"
+	count := 1
+	result := search.Search(text, subStrings, caseSensitivity, method, count)
+	fmt.Println(result)
+
 }

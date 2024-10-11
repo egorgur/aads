@@ -1,145 +1,89 @@
 package search
 
-import "strings"
-
-type Method uint8 // Method enum
-
-const (
-	First Method = iota // Method enum
-	Last                // Method enum
+import (
+	"strings"
 )
 
-type searchParameters struct {
-	// Search func parameters
-	inputString     string
-	subString       []string
-	caseSensitivity bool
-	method          Method // A Method to search the sub strings
-	count           uint   // Optional
+// Get reversed string
+func reverseString(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
 }
 
-func WithCaseSensitivity(case_sensitivity bool) func(*searchParameters) {
-	// case_sensitivity parameter setter
-	return func(params *searchParameters) {
-		params.caseSensitivity = case_sensitivity
+// Prefix computation function
+func computePrefixFunction(pattern string) []int {
+	prefix := make([]int, len(pattern))
+	k := 0
+
+	for i := 1; i < len(pattern); i++ {
+		for k > 0 && pattern[k] != pattern[i] {
+			k = prefix[k-1]
+		}
+		if pattern[k] == pattern[i] {
+			k++
+		}
+		prefix[i] = k
 	}
+	return prefix
 }
 
-func WithMethod(method Method) func(*searchParameters) {
-	// method parameter setter
-	return func(params *searchParameters) {
-		params.method = method
-	}
-}
-
-func WithCount(count uint) func(*searchParameters) {
-	// count parameter setter
-	return func(params *searchParameters) {
-		params.count = count
-	}
-}
-
-type SearchResult struct {
-	value []uint
-}
-
-func Search(inputString string, subString []string, options ...func(*searchParameters)) (result map[string]*SearchResult) {
-	// Return an array of indexes of the found sub stings
-	params := &searchParameters{
-		inputString:     inputString,
-		subString:       subString,
-		caseSensitivity: false,
-		method:          First,
-		count:           1,
-	}
-	// Set optional parameters
-	for _, option := range options {
-		option(params)
+// Knuth-Morris-Pratt algorithm func
+func KMPSearch(text string, pattern string, caseSensitivity bool, method string, count int) []int {
+	// Если caseSensitivity флаг выключен, привести строки к нижнему регистру
+	if !caseSensitivity {
+		text = strings.ToLower(text)
+		pattern = strings.ToLower(pattern)
 	}
 
-	length := len(inputString)
+	if method == "last" {
+		text = reverseString(text)
+		pattern = reverseString(pattern)
+	}
 
-	var indexes = make(map[string]*SearchResult)
+	// Maximum number of founded sub strings is count
+	counter := 1
 
-	for _, subStr := range params.subString {
+	// Применение алгоритма КМП
+	prefix := computePrefixFunction(pattern)
+	matches := []int{}
+	n := len(text)
+	m := len(pattern)
+	k := 0
 
-		indexes[subStr] = nil
-
-		patternTable := patternTable(subStr, params.caseSensitivity)
-
-		subLength := len(subStr)
-		strIndex, subStrIndex := 0, 0
-
-		for strIndex < length {
-			if params.caseSensitivity {
-				if subStr[subStrIndex] == inputString[strIndex] {
-					subStrIndex++
-					strIndex++
-				}
+	for i := 0; i < n; i++ {
+		for k > 0 && pattern[k] != text[i] {
+			k = prefix[k-1]
+		}
+		if pattern[k] == text[i] {
+			k++
+		}
+		if k == m {
+			if counter > count {
+				break
+			}
+			if method == "last" {
+				matches = append(matches, n-i-1)
 			} else {
-				if strings.EqualFold(string(subStr[subStrIndex]), string(inputString[strIndex])) {
-					subStrIndex++
-					strIndex++
-				}
+				matches = append(matches, i-m+1)	
 			}
-
-			if subStrIndex == subLength {
-				if indexes[subStr] == nil {
-					indexes[subStr] = &SearchResult{
-						value: []uint{},
-					}
-				}
-				indexes[subStr].value = append(indexes[subStr].value, uint(strIndex-subLength))
-				subStrIndex = patternTable[subStrIndex-1]
-			} else if strIndex < length && subStr[subStrIndex] != inputString[strIndex] {
-				if subStrIndex != 0 {
-					subStrIndex = patternTable[subStrIndex-1]
-				} else {
-					strIndex++
-				}
-			}
+			k = prefix[k-1]
+			counter++
 		}
 	}
 
-	return indexes
+	return matches
 }
 
-func patternTable(subString string, caseSensitivity bool) []int {
-	// Create a pattern indexes table for Knuth–Morris–Pratt algorithm
-	length := len(subString)
-	patternTable := make([]int, length)
-	prevIndex := 0
-	index := 1
+// Обёртка для поиска подстрок
+func Search(text string, subStrings []string, caseSensitivity bool, method string, count int) map[string][]int {
+	results := make(map[string][]int)
 
-	for index < length {
-		if caseSensitivity {
-			if strings.EqualFold(string(subString[index]), string(subString[prevIndex])) {
-				prevIndex++
-				patternTable[index] = prevIndex
-				index++
-			} else {
-				if prevIndex != 0 {
-					prevIndex = patternTable[prevIndex-1]
-				} else {
-					patternTable[index] = 0
-					index++
-				}
-			}
-		} else {
-			if subString[index] == subString[prevIndex] {
-				prevIndex++
-				patternTable[index] = prevIndex
-				index++
-			} else {
-				if prevIndex != 0 {
-					prevIndex = patternTable[prevIndex-1]
-				} else {
-					patternTable[index] = 0
-					index++
-				}
-			}
-		}
+	for _, subString := range subStrings {
+		results[subString] = KMPSearch(text, subString, caseSensitivity, method, count)
 	}
 
-	return patternTable
+	return results
 }
