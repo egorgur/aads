@@ -75,14 +75,15 @@ var searchCmd = &cobra.Command{
 
 		parameters.text = text
 
-		substrings, err := cmd.Flags().GetString("substrings")
+		substrings, err := cmd.Flags().GetString("pattern")
 		if err == nil {
 			parameters.pattern = strings.Split(substrings, ",")
 		}
 
 		caseSensitive, err := cmd.Flags().GetBool("case-sensitive")
+
 		if err == nil {
-			parameters.caseSensitivity = caseSensitive
+			parameters.caseSensitivity = bool(caseSensitive)
 		}
 
 		method, err := cmd.Flags().GetString("method")
@@ -105,10 +106,21 @@ var searchCmd = &cobra.Command{
 			int(parameters.count))
 
 		for subString, positions := range results {
-			fmt.Printf("Substring: %s found at positions: %v\n", subString, positions)
+			fmt.Println(subString,positions)
+			printResult(parameters.text, subString, positions)
 		}
-
 	},
+}
+
+func printResult(text string, subString string, positions []int) {
+	lettersList := strings.Split(text, "")
+	highlightColor := "\033[31m"
+	resetColor := "\033[0m"
+	for _ ,pos := range positions {
+		lettersList[pos] = highlightColor + lettersList[pos]
+		lettersList[pos + len(subString) - 1] = lettersList[pos + len(subString) - 1] + resetColor
+	}
+	fmt.Println(subString+" "+strings.Join(lettersList,""))
 }
 
 func readFile(filePath string) (string, error) {
@@ -128,10 +140,11 @@ func init() {
 	// and all subcommands, e.g.:
 	searchCmd.Flags().StringP("text", "", "", "Text to search in")
 	searchCmd.Flags().StringP("file", "f", "", "Path to the text file to search in")
-	searchCmd.Flags().StringP("substrings", "s", "", "Comma-separated list of substrings to search for")
+	searchCmd.Flags().StringP("pattern", "s", "", "Comma-separated list of substrings to search for")
 	searchCmd.Flags().BoolP("case-sensitive", "c", false, "Enable case-sensitive search")
 	searchCmd.Flags().StringP("method", "m", "first", "Search method: 'first' for forward search, 'last' for reverse search")
 	searchCmd.Flags().IntP("count", "n", 0, "Number of matches to find (0 means find all matches)")
 
 	searchCmd.MarkFlagRequired("substrings")
 }
+
