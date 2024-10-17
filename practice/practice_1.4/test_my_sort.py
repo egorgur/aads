@@ -18,18 +18,26 @@ TEST_NUMBER = [
 
 TEST_STR = [
     [],
-    ['a'],
-    ['a', 'b', 'c', 'd', 'e'],
-    ['aa', 'aa', 'aa', 'ab', 'ac', 'b'],
-    ['e', 'd', 'c', 'b', 'a'],
-    ['abc', 'a', 'foo', 'bar', 'booz', 'baz', 'spam', 'love'],
-    ['abc', 'abc', 'abc'],
-    [''],
+    ["a"],
+    ["a", "b", "c", "d", "e"],
+    ["aa", "aa", "aa", "ab", "ac", "b"],
+    ["e", "d", "c", "b", "a"],
+    ["abc", "a", "foo", "bar", "booz", "baz", "spam", "love"],
+    ["abc", "abc", "abc"],
+    [""],
+    ["abc", "a", "foo", "bar", "booz", "baz", "spam", "love", "a2", "a1"],
 ]
+
+for data in TEST_NUMBER:
+    print(sorted(data))
+
+for data in TEST_STR:
+    print(sorted(data))
 
 
 class TestSort(unittest.TestCase):
     """Тест-кейс модуля my_sort"""
+
     def test_sort_number_increase(self):
         """Тест функции сортировки числовых данных по возрастанию"""
         for data in TEST_NUMBER:
@@ -41,8 +49,7 @@ class TestSort(unittest.TestCase):
         for data in TEST_NUMBER:
             with self.subTest():
                 self.assertEqual(
-                    my_sort.my_sort(data, reverse=True),
-                    sorted(data, reverse=True)
+                    my_sort.my_sort(data, reverse=True), sorted(data, reverse=True)
                 )
 
     def test_sort_str_increase(self):
@@ -56,6 +63,5 @@ class TestSort(unittest.TestCase):
         for data in TEST_STR:
             with self.subTest():
                 self.assertEqual(
-                    my_sort.my_sort(data, reverse=True),
-                    sorted(data, reverse=True)
+                    my_sort.my_sort(data, reverse=True), sorted(data, reverse=True)
                 )
