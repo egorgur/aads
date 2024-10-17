@@ -38,7 +38,7 @@ func insertionSort(arr []interface{}, left, right int, less func(a, b interface{
 		}
 		arr[j+1] = key
 		if visualize {
-			printStep("Insertion Sort", arr) 
+			printStep("Insertion Sort", arr)
 		}
 	}
 }
@@ -114,7 +114,7 @@ func TimSort(arr []interface{}, less func(a, b interface{}) bool, visualize bool
 }
 
 // TimSort function wrapper
-func Sort(input_arr []interface{}, reverse bool, visualize bool) error {
+func Sort(input_arr []interface{}, reverse bool, visualize bool) ([]interface{}, error) {
 
 	var containsInts bool
 
@@ -140,7 +140,7 @@ func Sort(input_arr []interface{}, reverse bool, visualize bool) error {
 		}
 
 		TimSort(input_arr, less, visualize)
-		return nil
+		return input_arr, nil
 	}
 
 	if containsStrings {
@@ -155,11 +155,11 @@ func Sort(input_arr []interface{}, reverse bool, visualize bool) error {
 		}
 
 		TimSort(input_arr, less, visualize)
-		return nil
+		return input_arr, nil
 	}
 
 	// If there are different element's types in the array or all elements are not sortable
-	return errors.New("Not sortable")
+	return nil, errors.New("Not sortable")
 }
 
 func onlyInts(input_array []interface{}) bool {
