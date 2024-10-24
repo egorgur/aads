@@ -1,9 +1,8 @@
 package mysort
 
 import (
-	"errors"
-	"fmt"
-	"strings"
+	// "errors"
+	"strconv"
 	"time"
 )
 
@@ -12,23 +11,12 @@ import (
 // Минимальный размер подмассива для сортировки вставками
 const minRun = 32
 
-// printArray выводит массив в консоль
-func printArray(arr []interface{}) {
-	for _, v := range arr {
-		fmt.Print(v, " ")
-	}
-	fmt.Println()
-}
 
-// printStep выводит текущий шаг сортировки и массив
-func printStep(stepName string, arr []interface{}) {
-	fmt.Printf("%s: %s\n", stepName, strings.Repeat("=", 10))
-	printArray(arr)
-	time.Sleep(500 * time.Millisecond) // Задержка для визуализации
-}
+
+
 
 // insertionSort выполняет сортировку вставками
-func insertionSort(arr []interface{}, left, right int, less func(a, b interface{}) bool, visualize bool) {
+func insertionSort(arr []interface{}, left, right int, less func(a, b interface{}) bool, visualize bool, sortChan chan []interface{}) {
 	for i := left + 1; i <= right; i++ {
 		key := arr[i]
 		j := i - 1
@@ -38,13 +26,14 @@ func insertionSort(arr []interface{}, left, right int, less func(a, b interface{
 		}
 		arr[j+1] = key
 		if visualize {
-			printStep("Insertion Sort", arr)
+			sortChan <- arr
+			time.Sleep(500 * time.Millisecond) // Задержка для визуализации
 		}
 	}
 }
 
 // merge выполняет слияние двух отсортированных подмассивов
-func merge(arr []interface{}, l, m, r int, less func(a, b interface{}) bool, visualize bool) {
+func merge(arr []interface{}, l, m, r int, less func(a, b interface{}) bool, visualize bool, sortChan chan []interface{}) {
 	n1, n2 := m-l+1, r-m
 	left := make([]interface{}, n1)
 	right := make([]interface{}, n2)
@@ -63,7 +52,8 @@ func merge(arr []interface{}, l, m, r int, less func(a, b interface{}) bool, vis
 		}
 		k++
 		if visualize {
-			printStep("Merge", arr) // Визуализация процесса слияния
+			sortChan <- arr
+			time.Sleep(500 * time.Millisecond) // Задержка для визуализации
 		}
 	}
 	for i < n1 {
@@ -71,7 +61,8 @@ func merge(arr []interface{}, l, m, r int, less func(a, b interface{}) bool, vis
 		i++
 		k++
 		if visualize {
-			printStep("Merge", arr)
+			sortChan <- arr
+			time.Sleep(500 * time.Millisecond) // Задержка для визуализации
 		}
 	}
 	for j < n2 {
@@ -79,13 +70,14 @@ func merge(arr []interface{}, l, m, r int, less func(a, b interface{}) bool, vis
 		j++
 		k++
 		if visualize {
-			printStep("Merge", arr)
+			sortChan <- arr
+			time.Sleep(500 * time.Millisecond) // Задержка для визуализации
 		}
 	}
 }
 
 // TimSort выполняет сортировку Timsort с визуализацией
-func TimSort(arr []interface{}, less func(a, b interface{}) bool, visualize bool) {
+func TimSort(arr []interface{}, less func(a, b interface{}) bool, visualize bool, sortChan chan []interface{}) {
 	n := len(arr)
 
 	// Сортировка подмассивов вставками
@@ -94,7 +86,7 @@ func TimSort(arr []interface{}, less func(a, b interface{}) bool, visualize bool
 		if end >= n {
 			end = n - 1
 		}
-		insertionSort(arr, i, end, less, visualize)
+		insertionSort(arr, i, end, less, visualize, sortChan)
 	}
 
 	// Слияние отсортированных подмассивов
@@ -108,13 +100,13 @@ func TimSort(arr []interface{}, less func(a, b interface{}) bool, visualize bool
 			if right >= n {
 				right = n - 1
 			}
-			merge(arr, left, mid, right, less, visualize)
+			merge(arr, left, mid, right, less, visualize, sortChan)
 		}
 	}
 }
 
 // TimSort function wrapper
-func Sort(input_arr []interface{}, reverse bool, visualize bool) ([]interface{}, error) {
+func Sort(input_arr []interface{}, reverse bool, visualize bool, sortChan chan []interface{}, resultChan chan []interface{})  {
 
 	var containsInts bool
 
@@ -131,16 +123,25 @@ func Sort(input_arr []interface{}, reverse bool, visualize bool) ([]interface{},
 	if containsInts {
 		if reverse {
 			less = func(a, b interface{}) bool {
-				return a.(int) > b.(int)
+				aV, _ := strconv.Atoi(a.(string))
+				bV, _ := strconv.Atoi(b.(string))
+				return aV > bV
 			}
 		} else {
 			less = func(a, b interface{}) bool {
-				return a.(int) < b.(int)
+				aV, _ := strconv.Atoi(a.(string))
+				bV, _ := strconv.Atoi(b.(string))
+				return aV < bV
 			}
 		}
 
-		TimSort(input_arr, less, visualize)
-		return input_arr, nil
+		
+
+		TimSort(input_arr, less, visualize, sortChan)
+		close(sortChan)
+		resultChan <- input_arr
+		close(resultChan)
+		return
 	}
 
 	if containsStrings {
@@ -154,19 +155,25 @@ func Sort(input_arr []interface{}, reverse bool, visualize bool) ([]interface{},
 			}
 		}
 
-		TimSort(input_arr, less, visualize)
-		return input_arr, nil
+		TimSort(input_arr, less, visualize, sortChan)
+		close(sortChan)
+		resultChan <- input_arr
+		close(resultChan)
+		return
 	}
 
 	// If there are different element's types in the array or all elements are not sortable
-	return nil, errors.New("Not sortable")
+	// return nil, errors.New("Not sortable")
 }
 
 func onlyInts(input_array []interface{}) bool {
 	for _, v := range input_array {
 		_, ok := v.(int)
 		if !ok {
-			return false
+			_, err := strconv.Atoi(v.(string))
+			if err != nil {
+				return false
+			}
 		}
 	}
 	return true

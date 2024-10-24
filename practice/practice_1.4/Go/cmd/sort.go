@@ -7,9 +7,12 @@ import (
 	"fmt"
 	"os"
 	"pr1_4/mysort"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
+
+	"github.com/charmbracelet/lipgloss"
 )
 
 // sortCmd represents the sort command
@@ -60,22 +63,34 @@ Use --file flag to read an array from file and sort it. The sorted array will be
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		
+
 		data := strings.Split(strData, ",")
 
-		sortedData, err := mysort.Sort(convertArray(data), reverse, visualize)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+		sortChan := make(chan []interface{})
+		resultChan := make(chan []interface{})
+
+		go func() {
+			mysort.Sort(convertArray(data), reverse, visualize, sortChan, resultChan)
+		}()
+
+		for arr := range sortChan {
+
+			renderChart(arr)
+
+			fmt.Printf("sort step %#+v\n", arr)
 		}
-		
+
+		sortedData := <-resultChan
+
 		result := arrayToString(sortedData)
 
 		if file != "" {
 			writeFile(file, result)
 		}
 
-		fmt.Printf("Result: %v", result)
+		fmt.Printf("Result: %v\n", result)
+
+		renderChart(sortedData)
 	},
 }
 
@@ -87,7 +102,7 @@ func readFile(filePath string) (string, error) {
 	return string(content), nil
 }
 
-func writeFile(filePath string, data string) (error) {
+func writeFile(filePath string, data string) error {
 	return os.WriteFile(filePath, []byte(data), os.ModePerm)
 }
 
@@ -101,7 +116,7 @@ func convertArray(data []string) []interface{} {
 
 func arrayToString(data []interface{}) string {
 	strs := make([]string, len(data))
-	for i:= range data {
+	for i := range data {
 		strs[i] = data[i].(string)
 	}
 	return strings.Join(strs, ",")
@@ -124,3 +139,103 @@ func init() {
 	// sortCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
+// VERTICAL BAR CHART
+
+var defaultStyle = lipgloss.NewStyle().
+	BorderStyle(lipgloss.NormalBorder()).
+	BorderForeground(lipgloss.Color("63")) // purple
+
+var axisStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("3")) // yellow
+
+var labelStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("63")) // purple
+
+var blockStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("9")) // red
+
+var blockStyle2 = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("2")) // green
+
+var blockStyle3 = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("6")) // cyan
+
+var blockStyle4 = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("3")) // yellow
+
+func renderChart(arr []interface{}) {
+
+	var containsInts bool
+
+	containsInts = onlyInts(arr) // If only integers are present
+
+	var containsStrings bool = false
+
+	if !containsInts {
+		containsStrings = onlyStrings(arr) // If only strings are present
+	}
+
+	if containsInts {
+		maxLength := 0
+		for _, element := range arr {
+			if value, _ := strconv.Atoi(element.(string)); value > maxLength {
+				maxLength = value
+			}
+		}
+
+		// Выводим диаграмму
+		for _, element := range arr {
+			value, _ := strconv.Atoi(element.(string))
+			bar := ""
+			for i := 0; i < value; i++ {
+				bar += "█" // Символ для столбика
+			}
+			fmt.Printf("%-10s | %s (%d)\n", element, bar, value)
+		}
+		return
+	}
+
+	if containsStrings {
+		// max length for strings
+		maxLength := 0
+		for _, element := range arr {
+			if len(element.(string)) > maxLength {
+				maxLength = len(element.(string))
+			}
+		}
+
+		// Выводим диаграмму
+		for _, element := range arr {
+			bar := ""
+			for i := 0; i < len(element.(string)); i++ {
+				bar += "█" // Символ для столбика
+			}
+			fmt.Printf("%-10s | %s (%d)\n", element, bar, len(element.(string)))
+		}
+		return
+	}
+
+}
+
+func onlyInts(input_array []interface{}) bool {
+	for _, v := range input_array {
+		_, ok := v.(int)
+		if !ok {
+			_, err := strconv.Atoi(v.(string))
+			if err != nil {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+func onlyStrings(input_array []interface{}) bool {
+	for _, v := range input_array {
+		_, ok := v.(string)
+		if !ok {
+			return false
+		}
+	}
+	return true
+}

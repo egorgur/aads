@@ -57,9 +57,13 @@ func TestSearch(t *testing.T) {
 		t.Run("TEST_NUMBER_INCREASE", func(t *testing.T) {
 			var got = make([]interface{}, len(dataSet))
 			copy(got, dataSet)
-			Sort(got, false, false)
+
+			sortChan := make(chan []interface{})
+			resultChan := make(chan []interface{})
+
+			Sort(got, false, false, sortChan, resultChan)
 			var want = make([]interface{}, len(dataSet))
-			copy(want, dataSet) 
+			copy(want, dataSet)
 			sort.Slice(want, func(i, j int) bool { return want[i].(int) < want[j].(int) })
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("\ngot: %+v \nwant: %+v\n", got, want)
@@ -71,9 +75,13 @@ func TestSearch(t *testing.T) {
 		t.Run("TEST_NUMBER_DECREASE", func(t *testing.T) {
 			var got = make([]interface{}, len(dataSet))
 			copy(got, dataSet)
-			Sort(got, true, false)
+
+			sortChan := make(chan []interface{})
+			resultChan := make(chan []interface{})
+
+			Sort(got, true, false, sortChan, resultChan)
 			var want = make([]interface{}, len(dataSet))
-			copy(want, dataSet) 
+			copy(want, dataSet)
 			sort.Slice(want, func(i, j int) bool { return want[i].(int) > want[j].(int) })
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("\ngot: %+v \nwant: %+v\n", got, want)
@@ -85,9 +93,13 @@ func TestSearch(t *testing.T) {
 		t.Run("TEST_STRING_INCREASE", func(t *testing.T) {
 			var got = make([]interface{}, len(dataSet))
 			copy(got, dataSet)
-			Sort(got, false, false)
+
+			sortChan := make(chan []interface{})
+			resultChan := make(chan []interface{})
+
+			Sort(got, false, false, sortChan, resultChan)
 			var want = make([]interface{}, len(dataSet))
-			copy(want, dataSet) 
+			copy(want, dataSet)
 			sort.Slice(want, func(i, j int) bool { return want[i].(string) < want[j].(string) })
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("\ngot: %+v \nwant: %+v\n", got, want)
@@ -99,9 +111,13 @@ func TestSearch(t *testing.T) {
 		t.Run("TEST_STRING_DECREASE", func(t *testing.T) {
 			var got = make([]interface{}, len(dataSet))
 			copy(got, dataSet)
-			Sort(got, true, false)
+
+			sortChan := make(chan []interface{})
+			resultChan := make(chan []interface{})
+
+			Sort(got, true, false, sortChan, resultChan)
 			var want = make([]interface{}, len(dataSet))
-			copy(want, dataSet) 
+			copy(want, dataSet)
 			sort.Slice(want, func(i, j int) bool { return want[i].(string) > want[j].(string) })
 			if !reflect.DeepEqual(got, want) {
 				t.Errorf("\ngot: %+v \nwant: %+v\n", got, want)
