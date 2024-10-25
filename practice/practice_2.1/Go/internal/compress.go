@@ -110,13 +110,13 @@ func fillArea(img *image.RGBA, x0, y0, width, height int, c color.Color, visuali
 	for x := x0; x <= x0+width; x++ {
 		for y := y0; y <= y0+height; y++ {
 			if visualize {
-				if x == x0 || x == x0+1 {
+				if x == x0 {
 					img.Set(x, y, color.Black)
-				} else if y == y0 || y == y0+1 {
+				} else if y == y0 {
 					img.Set(x, y, color.Black)
-				} else if x == x0+width || x == x0+width-1 {
+				} else if x == x0+width {
 					img.Set(x, y, color.Black)
-				} else if y == y0+height || y == y0+height-1 {
+				} else if y == y0+height {
 					img.Set(x, y, color.Black)
 				} else {
 					img.Set(x, y, c)

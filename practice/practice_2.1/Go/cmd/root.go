@@ -70,9 +70,9 @@ to quickly create a Cobra application.`,
 		// var delays []int
 
 		if isGif {
-			delays := make([]int, level)
+			delays := make([]int, level+1)
 
-			for stage := range level {
+			for stage := range level+1 {
 				stageFrame := compress.CompressImage(img, 0, 0, img.Bounds().Dx(), img.Bounds().Dy(), &frames, 0, stage, visualize)
 				frames = append(frames, rgbaToPaletted(stageFrame))
 				delays[stage] = 80
