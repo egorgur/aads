@@ -44,16 +44,16 @@ func recursiveNodeCreation(nodeChan chan *Node, oldImage image.Image, x0, y0, wi
 
 	nodeChan <- newNode
 
-	if width%2 != 0 {
-		width--
-	} else {
-		width++
-	}
-	if height%2 != 0 {
-		height--
-	} else {
-		height++
-	}
+	// if width%2 != 0 {
+	// 	width--
+	// } else {
+	// 	width++
+	// }
+	// if height%2 != 0 {
+	// 	height--
+	// } else {
+	// 	height++
+	// }
 
 	midWidth := width / 2
 	midHeight := height / 2
@@ -61,10 +61,10 @@ func recursiveNodeCreation(nodeChan chan *Node, oldImage image.Image, x0, y0, wi
 	// fmt.Printf("x0 %v, y0 %v, width %v, height %v\n", x0, y0, width, height)
 
 	wg.Add(4)
-	go recursiveNodeCreation(nodeChan, oldImage, x0, y0, midWidth, midHeight, newNode, level+1, maxLevel, wg)                        // lu
-	go recursiveNodeCreation(nodeChan, oldImage, x0+midWidth+1, y0, midWidth, midHeight, newNode, level+1, maxLevel, wg)             // ru
-	go recursiveNodeCreation(nodeChan, oldImage, x0, y0+midHeight+1, midWidth, midHeight, newNode, level+1, maxLevel, wg)            // ld
-	go recursiveNodeCreation(nodeChan, oldImage, x0+midWidth+1, y0+midHeight+1, midWidth, midHeight, newNode, level+1, maxLevel, wg) // rd
+	go recursiveNodeCreation(nodeChan, oldImage, x0, y0, midWidth, midHeight, newNode, level+1, maxLevel, wg)                                     // lu
+	go recursiveNodeCreation(nodeChan, oldImage, x0+midWidth+1, y0, width-midWidth-1, midHeight, newNode, level+1, maxLevel, wg)                    // ru
+	go recursiveNodeCreation(nodeChan, oldImage, x0, y0+midHeight+1, midWidth, height-midHeight-1, newNode, level+1, maxLevel, wg)                  // ld
+	go recursiveNodeCreation(nodeChan, oldImage, x0+midWidth+1, y0+midHeight+1, width-midWidth-1, height-midHeight-1, newNode, level+1, maxLevel, wg) // rd
 }
 
 // Функция для сжатия изображения с использованием квадродерева
