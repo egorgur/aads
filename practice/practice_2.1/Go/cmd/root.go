@@ -72,12 +72,11 @@ to quickly create a Cobra application.`,
 		if isGif {
 			delays := make([]int, level+1)
 
-			for stage := range level+1 {
+			for stage := range level + 1 {
 				stageFrame := compress.CompressImage(img, 0, 0, img.Bounds().Dx(), img.Bounds().Dy(), &frames, 0, stage, visualize)
 				frames = append(frames, rgbaToPaletted(stageFrame))
 				delays[stage] = 80
 			}
-
 
 			gifData := &gif.GIF{
 				Image: frames,
@@ -140,7 +139,7 @@ func init() {
 func rgbaToPaletted(img *image.RGBA) *image.Paletted {
 	bounds := img.Bounds()
 	palettedImage := image.NewPaletted(bounds, nil)
-  	quantizer := gogif.MedianCutQuantizer{NumColor: 64}
- 	quantizer.Quantize(palettedImage, bounds, img, image.ZP)
+	quantizer := gogif.MedianCutQuantizer{NumColor: 64}
+	quantizer.Quantize(palettedImage, bounds, img, image.ZP)
 	return palettedImage
 }

@@ -321,9 +321,9 @@ class Maze:
         Returns:
             None
         """
-        with open(filename, 'w', encoding='utf-8') as file:
+        with open(filename, "w", encoding="utf-8") as file:
             for row in self.maze:
-                file.write(''.join(map(str, row)) + '\n')
+                file.write("".join(map(str, row)) + "\n")
     
     def create_maze_png(self, maze: list[list[int]], solve_path: list[list[int]] = None) -> Image.Image:
         """
@@ -384,6 +384,8 @@ class Maze:
                 duration=duration, loop=loop)
         else:
             raise exceptions.NoImagesToCreateGifError
+    def get_gen_steps(self) -> tuple[str]:
+        """Retrun generation steps as a strings tuple."""
 
     def create_gif_maze_solve(self, filename: str, duration: int = 1000, loop: int = 0) -> None:
         """
