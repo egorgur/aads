@@ -146,8 +146,8 @@ def solve(solving_parameters: SolvingParameters):
         )
 
     start, end = (
-        (solving_parameters.start_x, solving_parameters.start_y),
-        (solving_parameters.end_x, solving_parameters.end_y),
+        (solving_parameters.start_x * 2 - 1, solving_parameters.start_y * 2 - 1),
+        (solving_parameters.end_x * 2 - 1, solving_parameters.end_y * 2 - 1),
     )
     maze.solve(start, end)
 
