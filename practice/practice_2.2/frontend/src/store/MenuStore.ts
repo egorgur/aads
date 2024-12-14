@@ -8,6 +8,16 @@ export enum MenuType {
 export interface MenuStore {
     menuType: MenuType,
     setMenuType: (type: MenuType) => {}
+    rows: number,
+    cols: number
+    console: boolean,
+    text: boolean,
+    image: boolean,
+    gif: boolean,
+    startX: number,
+    startY: number,
+    endX: number,
+    endY: number,
 }
 
 export const useMenuStore = create((set) => ({

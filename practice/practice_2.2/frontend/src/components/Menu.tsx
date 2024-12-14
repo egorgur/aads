@@ -1,5 +1,6 @@
 import NumberInput from "./NumberInput.tsx"
 import CheckBox from "./CheckBox.tsx"
+import { requestGeneration, requestSolve } from "../services/requests.ts"
 import { useMenuStore, MenuType, MenuStore } from "../store/MenuStore.ts"
 
 export default function Menu() {
@@ -48,7 +49,6 @@ export default function Menu() {
             return (
                 <menu className="
                 w-0 grow min-w-40 max-w-56
-                border-r border-gray-600
                 flex flex-col px-5
                 ">
 
@@ -103,7 +103,18 @@ export default function Menu() {
                     hover:text-zinc-50
                     hover:underline
                     transition-all transform duration-200
-                    ">Generate</button>
+                    "
+                        onClick={() => {
+                            requestGeneration({
+                                rows: rows,
+                                cols: cols,
+                                console: consoleFlag,
+                                text: textFlag,
+                                image: imageFlag,
+                                gif: gifFlag,
+                            })
+                        }}
+                    >Generate</button>
 
                 </menu>
             )
@@ -111,7 +122,6 @@ export default function Menu() {
             return (
                 <menu className="
                 w-0 grow min-w-40 max-w-56
-                border-r border-gray-600
                 flex flex-col px-5
 
                 ">
@@ -156,7 +166,16 @@ export default function Menu() {
                     hover:text-zinc-50
                     hover:underline
                     transition-all transform duration-200
-                    ">Solve</button>
+                    "
+                    onClick={() => {
+                        requestSolve({
+                            start_x:startX,
+                            start_y:startY,
+                            end_x: endX,
+                            end_y: endY,
+                        })
+                    }}
+                    >Solve</button>
 
                 </menu>
             )

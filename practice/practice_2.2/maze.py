@@ -384,8 +384,24 @@ class Maze:
                 duration=duration, loop=loop)
         else:
             raise exceptions.NoImagesToCreateGifError
-    def get_gen_steps(self) -> tuple[str]:
-        """Retrun generation steps as a strings tuple."""
+        
+    def get_solved_maze(self) -> list[list[int]]:
+        """Retrun solved maze as a data."""
+        maze = copy.deepcopy(self.maze)
+        path = self.solving_steps[-1]
+        for coords in path:
+            maze[coords[0]][coords[1]] = -100
+        return maze
+    
+    def get_solving_maze_steps(self) -> list[list[list[int]]]:
+        """Retrun solved maze as a data steps."""
+        steps = []
+        for path in self.solving_steps:
+            maze = copy.deepcopy(self.maze)
+            for coords in path:
+                maze[coords[0]][coords[1]] = -100
+            steps.append(maze)
+        return steps
 
     def create_gif_maze_solve(self, filename: str, duration: int = 1000, loop: int = 0) -> None:
         """

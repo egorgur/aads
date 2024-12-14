@@ -152,7 +152,8 @@ def solve(solving_parameters: SolvingParameters):
     maze.solve(start, end)
 
     return {
-        "solving_steps": maze.solving_steps,
+        "solve": maze.get_solved_maze(),
+        "solving_steps": maze.get_solving_maze_steps(),
         "rows": maze.rows,
         "cols": maze.cols,
     }

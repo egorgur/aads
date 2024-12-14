@@ -1,4 +1,5 @@
 import Menu from './components/Menu'
+import Display from './components/Display'
 import NavButton from './components/NavButton'
 import { MenuType } from "./store/MenuStore"
 
@@ -22,38 +23,33 @@ function App() {
       grow
       flex flex-col
       ">
-      <nav className="
+        <nav className="
       w-full h-8
       flex flex-row space-x-5 pl-5
       ">
 
-        <NavButton text="Generate" menuType={MenuType.Generate}/>
-        <NavButton text="Solve" menuType={MenuType.Solve}/>
+          <NavButton text="Generate" menuType={MenuType.Generate} />
+          <NavButton text="Solve" menuType={MenuType.Solve} />
 
-      </nav>
+        </nav>
 
-      <div className="
+        <div className="
       grow
       flex flex-row
       ">
 
-        <Menu/>
+          <Menu />
 
-        <aside className='grow'>
-
-
-
-
-        </aside>
+          <Display/>
 
 
 
-      </div>
+        </div>
 
 
 
       </main>
-      
+
     </>
   )
 }
